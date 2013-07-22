@@ -1,0 +1,2 @@
+lat	lon	title	description	icon	iconSize	iconOffset
+42.3357200623	-71.089881897	Title One	Description one<br>Second line.<br><br>(click again to close)	Ol_icon_blue_example.png	24,24	0,-24
