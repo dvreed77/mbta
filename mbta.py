@@ -7,5 +7,7 @@ def dave():
 	for en in fm.entity:
 		try:
 			print int(en.vehicle.trip.trip_id)
+
 		except:
+			STOP
 			pass

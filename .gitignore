@@ -1,3 +1,4 @@
 MBTA_GTFS/
 *.pyc
 .DS_STORE
+*.zip

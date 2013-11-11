@@ -23,6 +23,54 @@ Documentation is [here][4], but isn't super clear.  Here is what I have been abl
 	```
 4. That last command created the file `gtfs_realtime_pb2.py`.
 
+## GTFS Files
+1. Run run.sh
+	```
+	chmod 755 run.sh
+	./run.sh
+	```
+	
+## Queries
+
+request header needs to be set to accept “application/xml” or 
+“application/json” 
+
+### By Route
+http://realtime.mbta.com/developer/api/v1/routes?api_key=wX9NwuHnZU2ToO7GmGR9uw 
+
+### ROUTE LIST BY STOP 
+This query will return a list of routes that serve a particular stop
+http://realtime.mbta.com/developer/api/v1/routesbystop?api_key=ONf_8L8WpEulbmDR2Zon2A&stop=70065 
+
+### STOP LIST BY ROUTE
+This query will return a list of stops for a particular route. 
+http://realtime.mbta.com/developer/api/v1/stopsbyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=931_ 
+
+###STOP LIST BY USER LOCATION 
+This query will return a list of the five nearest stops from a particular location
+http://realtime.mbta.com/developer/api/v1/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9
+uw&lat=42.352913&lon=-71.064648 
+
+###SCHEDULED ARRIVALS AND DEPARTURES BY STOP 
+This query will return up to the next three scheduled arrivals and departures in the next hour for a 
+direction and route for a particular stop. 
+http://realtime.mbta.com/developer/api/v1/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9u
+w&stop=Back%20Bay&route=CR-Providence&direction=0 
+
+###SCHEDULED ARRIVALS AND DEPARTURES BY ROUTE 
+This query will return the scheduled arrivals and departures for the next three trips (including trips already 
+underway) in a direction for a particular route.
+http://realtime.mbta.com/developer/api/v1/schedulebyroute?api_key=wX9NwuHnZU2ToO7GmGR9
+uw&route=CR-Providence&direction=0
+
+###SCHEDULED ARRIVALS AND DEPARTURES BY TRIP 
+This query will return the scheduled arrivals and departures for a particular trip.
+http://realtime.mbta.com/developer/api/v1/schedulebytrip?api_key=wX9NwuHnZU2ToO7GmGR9u
+w&trip=CR-Providence-CR-Weekday-807 
+
+
+
+
 
 
 
