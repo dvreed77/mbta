@@ -4,7 +4,7 @@
 
 Documentation is [here] [1], but isn't super clear.  Here is what I have been able to do.
 
-1. download [protbuf] [2], a Google project to encode structured data efficiently.  This is important because this is realtime data, and was primarily given as XML files which are easy to read, but not that efficient.  This is a new happy medium.
+1. download [protbuf] [2], a Google project to encode structured data efficiently.  This is important because this is realtime data, and was primarily given as XML files which are easy to read, but not that efficient.  This is a new happy medium.  Here are the commands I needed to install this on my Mac:
 	
 	```
 	./configure
@@ -21,6 +21,7 @@ Documentation is [here] [1], but isn't super clear.  Here is what I have been ab
 	```
 	protoc --python_out=. gtfs-realtime.proto
 	```
+4. That last command created `gtfs_realtime_pb2.py`
 
 
 
