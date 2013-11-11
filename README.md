@@ -2,7 +2,7 @@
 
 ## Installation
 
-Documentation is [here] [1], but isn't super clear.  Here is what I have been able to do.
+Documentation is [here][4], but isn't super clear.  Here is what I have been able to do.
 
 1. download [protbuf] [2], a Google project to encode structured data efficiently.  This is important because this is realtime data, and was primarily given as XML files which are easy to read, but not that efficient.  This is a new happy medium.  Here are the commands I needed to install this on my Mac:
 	
@@ -21,7 +21,7 @@ Documentation is [here] [1], but isn't super clear.  Here is what I have been ab
 	```
 	protoc --python_out=. gtfs-realtime.proto
 	```
-4. That last command created `gtfs_realtime_pb2.py`
+4. That last command created the file `gtfs_realtime_pb2.py`.
 
 
 
@@ -29,3 +29,4 @@ Documentation is [here] [1], but isn't super clear.  Here is what I have been ab
 [1]: http://realtime.mbta.com/Portal/Content/Documents/MBTA-realtime_DeveloperDocumentation_v1.0.2_2013-06-25.pdf
 [2]: https://code.google.com/p/protobuf/downloads/detail?name=protobuf-2.5.0.tar.gz
 [3]: https://developers.google.com/transit/gtfs-realtime/gtfs-realtime-proto
+[4]: MBTA-realtime_DeveloperDocumentation_v1.0.4_2013-11-05.pdf
