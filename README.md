@@ -40,7 +40,7 @@ http://realtime.mbta.com/developer/api/v1/routes?api_key=wX9NwuHnZU2ToO7GmGR9uw
 
 ### ROUTE LIST BY STOP 
 This query will return a list of routes that serve a particular stop
-http://realtime.mbta.com/developer/api/v1/routesbystop?api_key=ONf_8L8WpEulbmDR2Zon2A&stop=70065 
+http://realtime.mbta.com/developer/api/v1/routesbystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=70065 
 
 ### STOP LIST BY ROUTE
 This query will return a list of stops for a particular route. 
