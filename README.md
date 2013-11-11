@@ -7,8 +7,9 @@ Documentation is [here] [1], but isn't super clear.  Here is what I have been ab
 1. download [protbuf] [2], a Google project to encode structured data efficiently.  This is important because this is realtime data, and was primarily given as XML files which are easy to read, but not that efficient.  This is a new happy medium.
 
 	> ./configure
-	> make
-	> make install
+	make
+	make install
+	
 	> cd python
 	> python setup.py build
 	> python setup.py install
