@@ -29,7 +29,7 @@ Documentation is [here][4], but isn't super clear.  Here is what I have been abl
 	chmod 755 run.sh
 	./run.sh
 	```
-	
+
 ## Queries
 
 request header needs to be set to accept “application/xml” or 
@@ -48,25 +48,21 @@ http://realtime.mbta.com/developer/api/v1/stopsbyroute?api_key=wX9NwuHnZU2ToO7Gm
 
 ###STOP LIST BY USER LOCATION 
 This query will return a list of the five nearest stops from a particular location
-http://realtime.mbta.com/developer/api/v1/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9
-uw&lat=42.352913&lon=-71.064648 
+http://realtime.mbta.com/developer/api/v1/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9uw&lat=42.352913&lon=-71.064648 
 
 ###SCHEDULED ARRIVALS AND DEPARTURES BY STOP 
 This query will return up to the next three scheduled arrivals and departures in the next hour for a 
 direction and route for a particular stop. 
-http://realtime.mbta.com/developer/api/v1/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9u
-w&stop=Back%20Bay&route=CR-Providence&direction=0 
+http://realtime.mbta.com/developer/api/v1/schedulebystop?api_key=wX9NwuHnZU2ToO7GmGR9uw&stop=Back%20Bay&route=CR-Providence&direction=0 
 
 ###SCHEDULED ARRIVALS AND DEPARTURES BY ROUTE 
 This query will return the scheduled arrivals and departures for the next three trips (including trips already 
 underway) in a direction for a particular route.
-http://realtime.mbta.com/developer/api/v1/schedulebyroute?api_key=wX9NwuHnZU2ToO7GmGR9
-uw&route=CR-Providence&direction=0
+http://realtime.mbta.com/developer/api/v1/schedulebyroute?api_key=wX9NwuHnZU2ToO7GmGR9uw&route=CR-Providence&direction=0
 
 ###SCHEDULED ARRIVALS AND DEPARTURES BY TRIP 
 This query will return the scheduled arrivals and departures for a particular trip.
-http://realtime.mbta.com/developer/api/v1/schedulebytrip?api_key=wX9NwuHnZU2ToO7GmGR9u
-w&trip=CR-Providence-CR-Weekday-807 
+http://realtime.mbta.com/developer/api/v1/schedulebytrip?api_key=wX9NwuHnZU2ToO7GmGR9uw&trip=CR-Providence-CR-Weekday-807 
 
 
 
