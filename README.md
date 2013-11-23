@@ -1,8 +1,8 @@
 # Playing with MBTA data
 
-## Installation
-
 Documentation is [here][4], but isn't super clear.  Here is what I have been able to do.
+
+## Install Protobuf
 
 1. download [protbuf] [2], a Google project to encode structured data efficiently.  This is important because this is realtime data, and was primarily given as XML files which are easy to read, but not that efficient.  This is a new happy medium.  Here are the commands I needed to install this on my Mac:
 	
@@ -29,6 +29,8 @@ Documentation is [here][4], but isn't super clear.  Here is what I have been abl
 	chmod 755 run.sh
 	./run.sh
 	```
+
+2. Documention is [here][5].
 
 ## Queries
 
@@ -74,3 +76,4 @@ http://realtime.mbta.com/developer/api/v1/schedulebytrip?api_key=wX9NwuHnZU2ToO7
 [2]: https://code.google.com/p/protobuf/downloads/detail?name=protobuf-2.5.0.tar.gz
 [3]: https://developers.google.com/transit/gtfs-realtime/gtfs-realtime-proto
 [4]: MBTA-realtime_DeveloperDocumentation_v1.0.4_2013-11-05.pdf
+[5]: https://developers.google.com/transit/gtfs/reference

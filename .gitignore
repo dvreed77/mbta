@@ -2,3 +2,6 @@ MBTA_GTFS/
 *.pyc
 .DS_STORE
 *.zip
+data/
+.ipynb_checkpoints/
+*.json

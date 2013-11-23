@@ -1,24 +1,398 @@
-<html><body>
-  <div id="mapdiv"></div>
-  <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title> 
+  <style>
+    html, body {
+     height: 100%;
+     font-family: "PT Sans", sans-serif;
+    }
+    
+    path {
+      fill: None;
+      /*fill-opacity: .2;*/
+      stroke: DarkSlateGrey;
+      stroke-linejoin: round;
+      stroke-width: 5px;
+      stroke-opacity: .8;
+    }
+
+    path.elevation {
+      stroke: DarkSlateGrey;
+      /*stroke-width: 10px;*/
+      stroke-linejoin: round;
+      stroke-width: 3px;
+      stroke-opacity: 1;
+    }
+
+    path.shadow {
+      stroke: white;
+      /*stroke-width: 10px;*/
+      stroke-linejoin: round;
+      stroke-width: 6px;
+      stroke-opacity: 1;
+    }
+
+    h1 {
+      font-weight: 300;
+      font-size: 30px;
+    }
+    #map { height: 100%; }
+
+    .overlay {
+      color: white;
+      border: 2px solid grey;
+      position: absolute;
+      left: 50px;
+      top: 50px;
+      width: 300px;
+      height: 400px;
+      background-color: rgba(47, 79, 79, 0.9);
+      padding: 0px 20px;
+    }
+
+    .elevation {
+      position: absolute;
+      left: 50px;
+      bottom: 20px;
+      /*background-color: white;*/
+    }
+
+    .overlay .title {
+      border-bottom: 1px solid #fff;
+    }
+
+    .overlay a {
+      color: white;
+    }
+
+    circle {
+      pointer-events: all;
+      fill: DimGrey;
+    }
+
+    .leaflet-control-command-interior
+{
+    background-image: url(https://dl.dropboxusercontent.com/u/8283278/CDN/Leaflet/images/command.png);
+    width: 20px;
+    height: 20px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+    padding: 3px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+    cursor: auto;
+    text-align: center;
+    background-color: #FFFFFF;
+}
+
+    .leaflet-control-command-interior:hover
+{
+    background-color: #F4F4F4;
+}
+    rect.background {
+      fill-opacity: 0;
+    }
+
+  </style>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+  <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.3"></script>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <div id="map"></div>
   <script>
-    map = new OpenLayers.Map("mapdiv");
-    map.addLayer(new OpenLayers.Layer.OSM());
- 
-    var pois = new OpenLayers.Layer.Text( "My Points",
-                    { location:"./textfile.txt",
-                      projection: map.displayProjection
-                    });
-    map.addLayer(pois);
- 
-    //Set start centrepoint and zoom    
-    var lonLat = new OpenLayers.LonLat( -(71 + 03/60.), (42 + 21/60) )
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
-          );
-    var zoom=11;
-    map.setCenter (lonLat, zoom);  
- 
+
+  center = new L.LatLng(42.12267, -70.96069);
+
+  var elev = {};
+  (function(){
+    var width=800,
+    height=50,
+    margin=3;
+
+    d3.select("div.elevation")
+    .style("width", width)
+    .style("height", height);
+
+    var svg = d3.select(".elevation").append("svg")
+    .attr("width", width+2*margin)
+    .attr("height", height+2*margin+25);
+
+    var text2 = svg.append("text")
+    .attr("x", 20)
+    .attr("y", height+margin+25)
+    .attr("font-size", 25)
+    .attr("fill", "White")
+    .attr("stroke", "white")
+    .attr("stroke-width", "3px");
+
+    var text = svg.append("text")
+    .attr("x", 20)
+    .attr("y", height+margin+25)
+    .attr("font-size", 25)
+    .attr("fill", "DarkSlateGrey");
+
+    var g = svg.append("g")
+    .attr("transform", "translate(" + margin + "," + margin + ")");
+
+    var x = d3.scale.linear()
+    .range([0, width]);
+
+    var y = d3.scale.linear()
+    .range([height, 0]);
+
+    var line = d3.svg.line()
+    .x(function(d, i) { return x(d.dist); })
+    .y(function(d) { return y(d.alt); });
+
+    var bisectData = d3.bisector(function(d) { return d.dist; }).left;
+
+    // var data = [];
+    // for (ii=0; ii < 200; ii++){
+    //  data.push({x:ii*.5, y: ii>0 ? (-0.5 + Math.random()) + data[ii-1].y : 0});
+    // }    
+    var format = d3.format('.1f');
+
+    
+
+    var path2 = g.append("path")
+    .attr("class", "shadow")
+    .attr("stroke-width", "10px")
+    .attr("fill", "white");
+
+
+    var path = g.append("path")
+    .attr("class", "elevation");
+
+    var focus = g.append("circle")
+    .attr("class", "focus")
+    .attr("r", 5)
+    .style("display", "none")
+    .style("fill", "white")
+    .style("stroke", "DarkSlateGrey")
+    .style("stroke-width", 3);
+
+    var bg = g.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height);
+
+    
+    
+
+    // var d2;
+
+    elev.initialize = function(data) {
+      elev.data = data;
+      // window.eldat = data;
+
+
+
+
+      var tmp = data.filter(function(d, i) { return i%Math.ceil(data.length/1000)==0; });
+
+      x.domain(d3.extent(data, function(d){ return d.dist; }));
+      y.domain(d3.extent(data, function(d){ return d.alt; }));      
+
+      path2.attr("d", line(tmp));
+      path.attr("d", line(tmp));
+
+
+      bg.on("mousemove", function() {
+        x0 = x.invert(d3.mouse(this)[0]);
+        i = bisectData(data, x0);
+
+        // console.log("here")
+
+        text2
+        .text("dist:"+format(data[i].dist*0.621371)+"mi. - el:"+format(data[i].alt*3.28084)+"ft.");
+
+        text
+        .text("dist:"+format(data[i].dist*0.621371)+"mi. - el:"+format(data[i].alt*3.28084)+"ft.");
+
+        focus
+        .attr("cx", x(data[i].dist))
+        .attr("cy", y(data[i].alt))
+        .style("display", "")
+
+        dot([data[i].lng, data[i].lat]);
+
+      });
+
+      bg.on("mouseout", function(){ focus.style("display", "none"); });
+    }
+
+    elev.set = function(bounds) {
+      var w = bounds.getWest(),
+      e = bounds.getEast(),
+      n = bounds.getNorth(),
+      s = bounds.getSouth();
+
+      // console.log(n,e,s,w)
+
+      var tmp = elev.data.filter(function(d){
+        return d.lat>s & d.lat<n & d.lng>w & d.lng<e;
+      });
+
+      tmp = tmp.filter(function(d, i) { return i%Math.floor(tmp.length/1000)==0; });
+
+      x.domain(d3.extent(tmp, function(d){ return d.dist; }));
+      // y.domain(d3.extent(tmp, function(d){ return d.alt; }));  
+
+      window.tmp = tmp;
+
+      path2.attr("d", line(tmp))
+      path.attr("d", line(tmp))
+
+    }
+  })(elev)
   </script>
-</body></html>
+  <script>
+
+    
+
+    var layer = new L.StamenTileLayer("terrain");
+    var map = new L.Map("map", {
+      center: center,
+      zoom: 9
+    });
+    map.addLayer(layer);
+
+    function MapShowCommand() {
+  map.setView(center, 9);
+}
+
+function addControls() {
+    var commandControl = new L.Control.Command({});
+    map.addControl(commandControl);
+}
+
+
+
+L.Control.Command = L.Control.extend({
+    options: {
+        position: 'topright',
+    },
+
+    onAdd: function (map) {
+        var controlDiv = L.DomUtil.create('div', 'leaflet-control-command');
+        L.DomEvent
+            .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+            .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+        .addListener(controlDiv, 'click', function () { MapShowCommand(); });
+
+        var controlUI = L.DomUtil.create('div', 'leaflet-control-command-interior', controlDiv);
+        controlUI.title = 'Map Commands';
+        return controlDiv;
+    }
+});
+
+L.control.command = function (options) {
+    return new L.Control.Command(options);
+};
+
+addControls();
+
+    function moveTo(pt, zoom){
+      map.setView(pt, zoom);
+
+      elev.set(map.getBounds());
+      // map.panTo(pt, zoom);
+    }
+
+    var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+    // Use Leaflet to implement a D3 geographic projection.
+    function project(x) {
+      var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+      return [point.x, point.y];
+    }
+    var feature = g.append("path")
+
+    var circ = g.append("circle")
+    .attr("r", 5)
+    .style("fill", "white")
+    .style("stroke", "DarkSlateGrey")
+    .style("stroke-width", 3)
+
+    function dot(pt){
+      // console.log(project(pt)[0]);
+      circ.attr("display", "")
+      circ.attr("cx", project(pt)[0])
+      circ.attr("cy", project(pt)[1])
+    }
+
+    // var simplify = d3.simplify()
+    // .projection(project);
+
+    d3.json("shape.json", function(data) {
+
+      var nest = d3.nest()
+      .key(function(d) { return d.year; })
+      .key(function(d) { return d.variety; })
+      .entries(yields);
+    
+      data = data.map(function(d) { 
+        return {lat:+d.lat, lng:+d.lon, alt:+d['altitude (m)'], dist:+d['distance (km)']};
+      });
+
+      window.data = data;
+
+      var bounds = d3.geo.bounds({
+          type: "LineString",
+          coordinates: data.map(function(d){ console.log(d); return [d.lng, d.lat]; })
+        });
+      
+          path = d3.geo.path().projection(project);
+
+      map.on("viewreset", reset);
+      reset();
+
+      elev.initialize(data);
+
+      // Reposition the SVG to cover the features.
+      function reset() {
+        // console.log(bounds);
+        var bottomLeft = project(bounds[0]),
+            topRight = project(bounds[1]);
+
+        svg .attr("width", topRight[0] - bottomLeft[0])
+            .attr("height", bottomLeft[1] - topRight[1])
+            .style("margin-left", bottomLeft[0] + "px")
+            .style("margin-top", topRight[1] + "px");
+
+        g.attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+        // feature.attr("d", path);
+
+        circ.attr("display", "none")
+
+        var n = 0;
+
+        feature.attr("d", path({
+          type: "LineString",
+          coordinates: data.map(function(d){ return [d.lng, d.lat]; })
+        }));
+        // elev.set(map.getBounds());
+      }
+    });
+
+    map.addControl(new L.Control.Zoom({position: 'topright'}));
+
+    function onMapClick(e) {
+      alert("You clicked the map at " + e.latlng);
+    }
+
+map.on('click', onMapClick);
+
+
+  </script>
+</body>
+</html>
